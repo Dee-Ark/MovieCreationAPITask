@@ -36,12 +36,8 @@ namespace MovieCreationAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Genre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageBase64")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long?>("GenreId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -57,7 +53,59 @@ namespace MovieCreationAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
                     b.ToTable("movie");
+                });
+
+            modelBuilder.Entity("MovieCreationAPI.Model.Domain.genres", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Cumedy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Drama")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Horror")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Love")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Roman")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Thriller")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("genres");
+                });
+
+            modelBuilder.Entity("MovieCreationAPI.Model.Domain.Movie", b =>
+                {
+                    b.HasOne("MovieCreationAPI.Model.Domain.genres", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId");
+
+                    b.Navigation("Genre");
                 });
 #pragma warning restore 612, 618
         }

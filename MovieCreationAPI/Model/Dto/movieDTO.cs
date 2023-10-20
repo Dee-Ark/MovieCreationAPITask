@@ -9,7 +9,6 @@
         public decimal TicketPrice { get; set; }
         public string? Country { get; set; }
         public string? Genre { get; set; }
-        //public string? Photo { get; set; }
-        public string ImageBase64 { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

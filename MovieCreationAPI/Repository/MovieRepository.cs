@@ -13,21 +13,27 @@ namespace MovieCreationAPI.Repository
         {
             _dBContext = dBContext;
         }
-        public async Task<Movie?> CreateRegionAsync(Movie movieRequestDTO, IFormFile image)
+        public async Task<Movie?> CreateMovie(Movie movieRequestDTO)
         {
-            if (image != null)
+            if (movieRequestDTO.Photo != null)
             {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    await image.CopyToAsync(memoryStream);
-                    byte[] imageBytes = memoryStream.ToArray();
-                    string base64String = Convert.ToBase64String(imageBytes);
-                    movieRequestDTO.ImageBase64 = base64String;
-                }
+                movieRequestDTO.Photo = await ConvertPhotoToBase64StringAsync(movieRequestDTO.Photo);
             }
+
             await _dBContext.movie.AddAsync(movieRequestDTO);
             await _dBContext.SaveChangesAsync();
+
             return movieRequestDTO;
+        }
+
+        private async Task<string> ConvertPhotoToBase64StringAsync(IFormFile photo)
+        {
+            using (var stream = new MemoryStream())
+            {
+                await photo.CopyToAsync(stream);
+                byte[] bytes = stream.ToArray();
+                return Convert.ToBase64String(bytes);
+            }
         }
 
         public async Task<Movie?> DeleteRegionAsync(long Id)
@@ -48,9 +54,9 @@ namespace MovieCreationAPI.Repository
                 Rating = deleteMovies.Rating,
                 Description = deleteMovies.Description,
                 ReleaseDate = deleteMovies.ReleaseDate,
-                Genre = deleteMovies.Genre,
+                Genre = deleteMovies.Genre.Roman,
                 TicketPrice = deleteMovies.TicketPrice,
-                ImageBase64 = deleteMovies.ImageBase64
+                Photo = deleteMovies.Photo.Name
             };
             return deleteMovies;
         }
@@ -82,7 +88,7 @@ namespace MovieCreationAPI.Repository
             existingMovies.Description = movieRequestDTO.Description;
             existingMovies.Country = movieRequestDTO.Country;
             existingMovies.Genre = movieRequestDTO.Genre;
-            existingMovies.ImageBase64 = movieRequestDTO.ImageBase64;
+            existingMovies.Photo = movieRequestDTO.Photo;
 
             await _dBContext.SaveChangesAsync();
             return existingMovies;

@@ -19,7 +19,6 @@ namespace MovieCreationAPI.Model.Dto
         [Required]
         public string? Genre { get; set; }
         [Required]
-        //public string? Photo { get; set; }
-        public string Photo { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

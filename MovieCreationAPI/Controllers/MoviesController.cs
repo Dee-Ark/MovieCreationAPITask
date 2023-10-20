@@ -71,20 +71,18 @@ namespace MovieCreationAPI.Controllers
 
         [HttpPost]
         [ValidateModelState]
-        public async Task<IActionResult> CreateRegionUser([FromForm] addMovieRequestDTO requestDTO, IFormFile imag)
+        public async Task<IActionResult> CreateMovie([FromForm] addMovieRequestDTO requestDTO)
         {
             try
             {
                 _logger.LogInformation("To Create a movie Method was called");
                 var movieMap = _mapper.Map<Movie>(requestDTO);
 
-                movieMap = await _repository.CreateRegionAsync(movieMap, imag);
+                movieMap = await _repository.CreateMovie(movieMap);
 
                 var moviesDTO = _mapper.Map<movieDTO>(movieMap);
 
                 _logger.LogInformation($"Creating data into the databse: {JsonSerializer.Serialize(moviesDTO)}");
-
-                //return CreatedAtAction(nameof(GetById), new { id = movieMap.Id }, moviesDTO);
                 return Ok(moviesDTO);
             }
             catch (Exception ex)

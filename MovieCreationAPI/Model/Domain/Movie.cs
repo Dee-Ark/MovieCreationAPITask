@@ -1,4 +1,6 @@
-﻿namespace MovieCreationAPI.Model.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MovieCreationAPI.Model.Domain
 {
     public class Movie
     {
@@ -9,8 +11,20 @@
         public string? Rating { get; set; }
         public decimal TicketPrice { get; set; }
         public string? Country { get; set; }
-        public string? Genre { get; set; }
-        //public string? Photo { get; set; }
-        public string ImageBase64 { get; set; }
+        public genres? Genre { get; set; }
+        [NotMapped]
+        public IFormFile Photo { get; set; }
+    }
+
+    public class genres
+    {
+        public long Id { get; set; }
+        public string Action { get; set; }
+        public string Love { get; set; }
+        public string Horror { get; set; }
+        public string Drama { get; set; }
+        public string Thriller { get; set; }
+        public string Roman { get; set; }
+        public string Cumedy { get; set; }
     }
 }
