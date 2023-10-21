@@ -5,20 +5,21 @@ namespace MovieCreationAPI.Model.Dto
     public class addMovieRequestDTO
     {
         [Required]
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [Required]
-        public string? Description { get; set; }
+        public string Description { get; set; }
         [Required]
-        public DateTime ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; }
         [Required]
-        public string? Rating { get; set; }
+        public int Rating { get; set; }
         [Required]
         public decimal TicketPrice { get; set; }
         [Required]
-        public string? Country { get; set; }
+        public string Country { get; set; }
         [Required]
-        public string? Genre { get; set; }
-        [Required]
-        public IFormFile Photo { get; set; }
+        public List<string> Genres { get; set; } 
+        //[Required]
+        //public IFormFile Photo { get; set; }
+
     }
 }

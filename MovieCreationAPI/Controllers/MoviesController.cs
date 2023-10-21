@@ -18,6 +18,7 @@ namespace MovieCreationAPI.Controllers
         private readonly IMovieRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<MoviesController> _logger;
+        private List<Movie> _movies = new List<Movie>();
 
         public MoviesController(IMovieRepository movieRepository, IMapper mapper, ILogger<MoviesController> logger)
         {
@@ -34,7 +35,7 @@ namespace MovieCreationAPI.Controllers
                 _logger.LogInformation("GetAllRegions Method was called");
                 var moviesRes = await _repository.GetAllAsync();
 
-                var moviesDTO = _mapper.Map<List<movieRequestDTO>>(moviesRes);
+                var moviesDTO = _mapper.Map<List<movieDTO>>(moviesRes);
                 _logger.LogInformation($"Fetch data from databse: {JsonSerializer.Serialize(moviesDTO)}");
                 return Ok(moviesDTO);
             }
@@ -58,7 +59,7 @@ namespace MovieCreationAPI.Controllers
                 {
                     return NotFound();
                 }
-                var moviesDTO = _mapper.Map<List<movieRequestDTO>>(movies);
+                var moviesDTO = _mapper.Map<movieDTO>(movies);
                 _logger.LogInformation($"Fetch data from databse by MovieId: {JsonSerializer.Serialize(moviesDTO)}");
                 return Ok(moviesDTO);
             }
@@ -71,19 +72,27 @@ namespace MovieCreationAPI.Controllers
 
         [HttpPost]
         [ValidateModelState]
-        public async Task<IActionResult> CreateMovie([FromForm] addMovieRequestDTO requestDTO)
+        public async Task<IActionResult> CreateMovie([FromForm] addMovieRequestDTO requestDTO, IFormFile Photo)
         {
             try
             {
-                _logger.LogInformation("To Create a movie Method was called");
-                var movieMap = _mapper.Map<Movie>(requestDTO);
+                if (requestDTO.Rating < 1 || requestDTO.Rating > 5)
+                {
+                    return BadRequest(requestDTO);
+                }
+                else
+                {
+                    _logger.LogInformation("To Create a movie Method was called");
+                    var movieMap = _mapper.Map<Movie>(requestDTO);
 
-                movieMap = await _repository.CreateMovie(movieMap);
+                    movieMap = await _repository.CreateMovie(movieMap, Photo);
 
-                var moviesDTO = _mapper.Map<movieDTO>(movieMap);
+                    var moviesDTO = _mapper.Map<movieDTO>(movieMap);
 
-                _logger.LogInformation($"Creating data into the databse: {JsonSerializer.Serialize(moviesDTO)}");
-                return Ok(moviesDTO);
+                    _logger.LogInformation($"Creating data into the databse: {JsonSerializer.Serialize(moviesDTO)}");
+                    return Ok(moviesDTO);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -110,7 +119,7 @@ namespace MovieCreationAPI.Controllers
                     return NotFound();
                 }
 
-                var moviesDTO = _mapper.Map<movieRequestDTO>(movieDomainModel);
+                var moviesDTO = _mapper.Map<updateMovieRequestDTO>(movieDomainModel);
 
                 _logger.LogInformation($"Updating data in the databse: {JsonSerializer.Serialize(moviesDTO)}");
 
@@ -138,7 +147,7 @@ namespace MovieCreationAPI.Controllers
                 {
                     return NotFound();
                 }
-                var moviesDTO = _mapper.Map<movieRequestDTO>(movies);
+                var moviesDTO = _mapper.Map<movieDTO>(movies);
                 _logger.LogInformation($"Updating data in the databse: {JsonSerializer.Serialize(moviesDTO)}");
                 return Ok(moviesDTO);
             }

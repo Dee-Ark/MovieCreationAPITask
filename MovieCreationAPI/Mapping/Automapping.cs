@@ -9,7 +9,7 @@ namespace MovieCreationAPI.Mapping
     {
         public Automapping()
         {
-            CreateMap<Movie, movieRequestDTO>().ReverseMap();
+            CreateMap<Movie, movieDTO>().ReverseMap();
             CreateMap<addMovieRequestDTO, Movie>().ReverseMap();
             CreateMap<updateMovieRequestDTO, Movie>().ReverseMap();
         }

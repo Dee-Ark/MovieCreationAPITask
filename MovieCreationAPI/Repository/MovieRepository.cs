@@ -13,18 +13,53 @@ namespace MovieCreationAPI.Repository
         {
             _dBContext = dBContext;
         }
-        public async Task<Movie?> CreateMovie(Movie movieRequestDTO)
-        {
-            if (movieRequestDTO.Photo != null)
-            {
-                movieRequestDTO.Photo = await ConvertPhotoToBase64StringAsync(movieRequestDTO.Photo);
-            }
+        //public async Task<Movie?> CreateMovie(Movie movieRequestDTO, IFormFile file)
+        //{
+        //    if (file != null && file.Length > 0)
+        //    {
+        //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+        //        string filePath = Path.Combine("your_upload_directory", uniqueFileName);
 
-            await _dBContext.movie.AddAsync(movieRequestDTO);
-            await _dBContext.SaveChangesAsync();
+        //        using (var stream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
+
+        //        // Update the 'Movie' entity to store the file path.
+        //        movieRequestDTO.Photo = filePath.ToString();
+        //    }
+
+        //    // Add the modified 'movieRequestDTO' to the context and save it.
+        //    await _dBContext.movie.AddAsync(movieRequestDTO);
+        //    await _dBContext.SaveChangesAsync();
+
+        //    return movieRequestDTO;
+        //}
+
+
+        public async Task<Movie?> CreateMovie(Movie movieRequestDTO, IFormFile photo)
+        {
+            if (photo != null && photo.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                string filePath = Path.Combine("ImagesFolder", uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                // Update the 'Movie' entity to store the file path.
+                movieRequestDTO.Photo = filePath;
+
+                // Add the modified 'movieRequestDTO' to the context and save it.
+                await _dBContext.movie.AddAsync(movieRequestDTO);
+                await _dBContext.SaveChangesAsync();
+            }
 
             return movieRequestDTO;
         }
+
 
         private async Task<string> ConvertPhotoToBase64StringAsync(IFormFile photo)
         {
@@ -54,9 +89,9 @@ namespace MovieCreationAPI.Repository
                 Rating = deleteMovies.Rating,
                 Description = deleteMovies.Description,
                 ReleaseDate = deleteMovies.ReleaseDate,
-                Genre = deleteMovies.Genre.Roman,
+                Genres = deleteMovies.Genres,
                 TicketPrice = deleteMovies.TicketPrice,
-                Photo = deleteMovies.Photo.Name
+                Photo = deleteMovies.Photo
             };
             return deleteMovies;
         }
@@ -87,7 +122,7 @@ namespace MovieCreationAPI.Repository
             existingMovies.Rating = movieRequestDTO.Rating;
             existingMovies.Description = movieRequestDTO.Description;
             existingMovies.Country = movieRequestDTO.Country;
-            existingMovies.Genre = movieRequestDTO.Genre;
+            existingMovies.Genres = movieRequestDTO.Genres;
             existingMovies.Photo = movieRequestDTO.Photo;
 
             await _dBContext.SaveChangesAsync();
