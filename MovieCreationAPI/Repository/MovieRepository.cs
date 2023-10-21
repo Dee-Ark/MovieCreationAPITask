@@ -13,28 +13,6 @@ namespace MovieCreationAPI.Repository
         {
             _dBContext = dBContext;
         }
-        //public async Task<Movie?> CreateMovie(Movie movieRequestDTO, IFormFile file)
-        //{
-        //    if (file != null && file.Length > 0)
-        //    {
-        //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-        //        string filePath = Path.Combine("your_upload_directory", uniqueFileName);
-
-        //        using (var stream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await file.CopyToAsync(stream);
-        //        }
-
-        //        // Update the 'Movie' entity to store the file path.
-        //        movieRequestDTO.Photo = filePath.ToString();
-        //    }
-
-        //    // Add the modified 'movieRequestDTO' to the context and save it.
-        //    await _dBContext.movie.AddAsync(movieRequestDTO);
-        //    await _dBContext.SaveChangesAsync();
-
-        //    return movieRequestDTO;
-        //}
 
 
         public async Task<Movie?> CreateMovie(Movie movieRequestDTO, IFormFile photo)
@@ -60,17 +38,6 @@ namespace MovieCreationAPI.Repository
             return movieRequestDTO;
         }
 
-
-        private async Task<string> ConvertPhotoToBase64StringAsync(IFormFile photo)
-        {
-            using (var stream = new MemoryStream())
-            {
-                await photo.CopyToAsync(stream);
-                byte[] bytes = stream.ToArray();
-                return Convert.ToBase64String(bytes);
-            }
-        }
-
         public async Task<Movie?> DeleteRegionAsync(long Id)
         {
             var deleteMovies = await _dBContext.movie.FirstOrDefaultAsync(x => x.Id == Id);
@@ -82,7 +49,7 @@ namespace MovieCreationAPI.Repository
             }
             _dBContext.movie.Remove(deleteMovies);
             await _dBContext.SaveChangesAsync();
-            var movieDTO = new movieRequestDTO()
+            var movieDTO = new deleteMovieRequestDTO()
             {
                 Name = deleteMovies.Name,
                 Country = deleteMovies.Country,

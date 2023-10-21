@@ -1,6 +1,6 @@
 ﻿namespace MovieCreationAPI.Model.Dto
 {
-    public class movieRequestDTO
+    public class deleteMovieRequestDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
