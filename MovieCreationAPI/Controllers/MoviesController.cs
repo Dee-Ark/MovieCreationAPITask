@@ -42,8 +42,9 @@ namespace MovieCreationAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("An error has occured, please, check again", ex.Message);
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
+            
         }
 
 
@@ -66,8 +67,9 @@ namespace MovieCreationAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("An error has occured, please, check again", ex.Message);
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
+            
         }
 
         [HttpPost]
@@ -97,8 +99,9 @@ namespace MovieCreationAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("An error has occured, please, check again", ex.Message);
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
+            
         }
 
         [HttpPut]
@@ -132,8 +135,9 @@ namespace MovieCreationAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("An error has occured, please, check again", ex.Message);
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
+            
 
         }
 
@@ -158,8 +162,9 @@ namespace MovieCreationAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError("An error has occured, please, check again", ex.Message);
+                return BadRequest(ex.Message);
             }
-            return BadRequest();
+            
         }
     }
 }
