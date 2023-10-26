@@ -8,7 +8,7 @@ namespace MovieCreationAPI.Interface
         Task<List<Movie>> GetAllAsync();
         Task<Movie?> GetByIdAsync(long Id);
         Task<Movie?> CreateMovie(Movie movieRequestDTO, IFormFile Photo);
-        Task<Movie?> UpdateRegionAsync(long Id, Movie movieRequestDTO);
-        Task<Movie?> DeleteRegionAsync(long Id);
+        Task<Movie?> UpdateMoviesAsync(long Id, Movie movieRequestDTO, IFormFile Photo);
+        Task<Movie?> DeleteMoviesAsync(long Id);
     }
 }

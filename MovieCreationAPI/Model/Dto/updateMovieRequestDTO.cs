@@ -9,6 +9,6 @@
         public decimal TicketPrice { get; set; }
         public string Country { get; set; }
         public List<string> Genres { get; set; } 
-        //public string Photo { get; set; }
+        public string? Photo { get; set; }
     }
 }

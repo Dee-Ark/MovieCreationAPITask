@@ -104,15 +104,19 @@ namespace MovieCreationAPI.Controllers
         [HttpPut]
         [Route("{Id}")]
         [ValidateModelState]
-        public async Task<IActionResult> UpdateUserRegion([FromRoute] long Id, [FromBody] updateMovieRequestDTO updateRegionRequest)
+        public async Task<IActionResult> UpdateMoviesRegion([FromRoute] long Id, [FromBody] updateMovieRequestDTO updateRegionRequest, IFormFile Photo)
         {
             try
             {
+                if (updateRegionRequest.Rating < 1 || updateRegionRequest.Rating > 5)
+                {
+                    return BadRequest(updateRegionRequest);
+                }
                 _logger.LogInformation("To Update a movie Method was called");
 
                 var movieDomainModel = _mapper.Map<Movie>(updateRegionRequest);
 
-                movieDomainModel = await _repository.UpdateRegionAsync(Id, movieDomainModel);
+                movieDomainModel = await _repository.UpdateMoviesAsync(Id, movieDomainModel, Photo);
 
                 if (movieDomainModel == null)
                 {
@@ -136,19 +140,19 @@ namespace MovieCreationAPI.Controllers
 
         [HttpDelete]
         [Route("{Id}")]
-        public async Task<IActionResult> DeleteRegion([FromRoute] long Id)
+        public async Task<IActionResult> DeleteMovies([FromRoute] long Id)
         {
             try
             {
                 _logger.LogInformation("To Delete a movie Method was called");
 
-                var movies = await _repository.DeleteRegionAsync(Id);
+                var movies = await _repository.DeleteMoviesAsync(Id);
                 if (movies == null)
                 {
                     return NotFound();
                 }
                 var moviesDTO = _mapper.Map<movieDTO>(movies);
-                _logger.LogInformation($"Updating data in the databse: {JsonSerializer.Serialize(moviesDTO)}");
+                _logger.LogInformation($"Deleting data in the databse: {JsonSerializer.Serialize(moviesDTO)}");
                 return Ok(moviesDTO);
             }
             catch (Exception ex)

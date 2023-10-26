@@ -38,7 +38,7 @@ namespace MovieCreationAPI.Repository
             return movieRequestDTO;
         }
 
-        public async Task<Movie?> DeleteRegionAsync(long Id)
+        public async Task<Movie?> DeleteMoviesAsync(long Id)
         {
             var deleteMovies = await _dBContext.movie.FirstOrDefaultAsync(x => x.Id == Id);
 
@@ -75,8 +75,18 @@ namespace MovieCreationAPI.Repository
             return movies;
         }
 
-        public async Task<Movie?> UpdateRegionAsync(long Id, Movie movieRequestDTO)
+        public async Task<Movie?> UpdateMoviesAsync(long Id, Movie movieRequestDTO, IFormFile Photo)
         {
+            if (Photo != null && Photo.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Photo.FileName;
+                string filePath = Path.Combine("ImagesFolder", uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Photo.CopyToAsync(stream);
+                }
+            }
             var existingMovies = await _dBContext.movie.FirstOrDefaultAsync(b => b.Id == Id);
             if (existingMovies == null)
             {
