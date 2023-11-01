@@ -58,7 +58,7 @@ namespace MovieCreationAPI.Controllers
                 var movies = await _repository.GetByIdAsync(Id);
                 if (movies == null)
                 {
-                    return NotFound();
+                    return NotFound("Movie Not Found, Try again later");
                 }
                 var moviesDTO = _mapper.Map<movieDTO>(movies);
                 _logger.LogInformation($"Fetch data from databse by MovieId: {JsonSerializer.Serialize(moviesDTO)}");
@@ -123,7 +123,7 @@ namespace MovieCreationAPI.Controllers
 
                 if (movieDomainModel == null)
                 {
-                    return NotFound();
+                    return NotFound("Movie Not Updated, Try again later");
                 }
 
                 var moviesDTO = _mapper.Map<updateMovieRequestDTO>(movieDomainModel);
@@ -153,7 +153,7 @@ namespace MovieCreationAPI.Controllers
                 var movies = await _repository.DeleteMoviesAsync(Id);
                 if (movies == null)
                 {
-                    return NotFound();
+                    return NotFound("Movie Not Deleted, Try again later");
                 }
                 var moviesDTO = _mapper.Map<movieDTO>(movies);
                 _logger.LogInformation($"Deleting data in the databse: {JsonSerializer.Serialize(moviesDTO)}");
